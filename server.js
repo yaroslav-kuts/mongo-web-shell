@@ -13,6 +13,10 @@ server.get('/api/v1/check', (request, reply) => {
   return reply.send({ status: 'ok' });
 })
 
+server.post('/api/v1/execute', function (req, reply) {
+  return reply.send({ status: 'ok' });
+})
+
 server.get('/', function (req, reply) {
   return reply.sendFile('index.html');
 })

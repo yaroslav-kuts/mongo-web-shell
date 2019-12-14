@@ -1,26 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    uri: '',
+    script: '',
+    output: 'test',
+  };
+
+  constructor() {
+    super();
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  async handleSubmit(event) {
+    event.preventDefault();
+
+    const response = await fetch('/api/v1/execute', { method: 'POST' });
+    const data = await response.json();
+
+    this.setState(prev => ({
+      ...prev,
+      output: JSON.stringify(data),
+    }));
+  }
+
+  render() {
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit} >
+          <input type="text" name="uri" value={this.state.uri} />
+          <br />
+          <textarea name="script" value={this.state.script} />
+          <br />
+          <button>Execute</button>
+        </form>
+        <p>{this.state.output}</p>
+      </div>
+    );
+  }
 }
 
 export default App;
