@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import AceEditor from 'react-ace';
+
+import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/theme-monokai";
 
 class App extends Component {
   state = {
@@ -9,16 +13,18 @@ class App extends Component {
 
   constructor() {
     super();
-    this.handleChange = this.handleChange.bind(this);
+    this.handleURIChange = this.handleURIChange.bind(this);
+    this.handleEditorChange = this.handleEditorChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
-    const { name, value } = event.target;
-    this.setState(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+  handleURIChange(event) {
+    const { value: uri } = event.target;
+    this.setState(prev => ({ ...prev, uri }));
+  }
+
+  handleEditorChange(script) {
+    this.setState(prev => ({ ...prev, script }));
   }
 
   async handleSubmit(event) {
@@ -43,10 +49,19 @@ class App extends Component {
     return (
       <div className="app" >
         <form onSubmit={this.handleSubmit} >
-          <input type="text" name="uri" value={this.state.uri} onChange={this.handleChange} />
-          <br />
-          <textarea name="script" value={this.state.script} onChange={this.handleChange} />
-          <br />
+          <input
+            type="text"
+            name="uri"
+            value={this.state.uri}
+            onChange={this.handleURIChange}
+          /><br />
+          <AceEditor
+            mode="javascript"
+            theme="monokai"
+            name="script"
+            value={this.state.script}
+            onChange={this.handleEditorChange}
+          />
           <button>Execute</button>
         </form>
         <p>{this.state.output}</p>
